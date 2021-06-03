@@ -1,0 +1,100 @@
+link
+https://itesm.zoom.us/rec/play/aALGNFdQ0FdY0_y-mLKJen93ErgCl8XiCyzbnsR8whLvIdvjAdbdtp2FF-JRnYc-3Od78LJA4KQi3fU.gARwTOFtKVfRARQY?startTime=1604440648000&_x_zm_rtaid=lKUEgP0IStSVCYGD0-fr7Q.1614645413726.8d6bce5ddc1c35d7317280e9c737fc79&_x_zm_rhtaid=595
+
+marcelo 2139
+
+------------------------
+
+START ONOS
+sudo docker start onos
+
+
+INGRESAR A LA INTERFAZ DE ONOS
+ssh -p 8101 karaf@172.17.0.2
+passowrd: karaf
+aplicación: httpDdosDetector
+log:tail httpDdosDetector
+
+------------------------
+
+
+NETWORK DEPLOYMENT RUN MININET
+
+cd Downloads/D-ITG-2.../D-ITG-2.../bin
+sudo mn --custom customTopoTestbed.py --topo mytopo --controller=remote,ip=172.17.0.2 --switch ovs,protocols=OpenFlow13
+
+ACCEDER A INTERFAZ EN NAVEGADOR:
+localhost:8181/onos/ui/#/topo2
+usuario: onos
+passw: rocks
+comando mininet:
+pingall
+
+abrir host mininet:
+xterm h1
+
+cuando se esta en el nodo de la victima:
+iniciar server
+python -m SimpleHTTPServer 80
+
+trafico normal
+h4,h10
+10 envia, 4 recibe
+en 4: ./ITGRecv
+en 10: python3 NormalTrafficGenerator.py
+
+
+
+ataque slow en un nodo 7:
+slowhttptest -c 3000 -H -g -o my_header_stats -i 10 -r 200 -t GET -u http://10.0.0.1/ -x 24 -p 3
+
+slowhttptest -c 1000 -H -g -o my_header_stats -i 10 -r 100 -t GET -u http://10.0.0.1/ -x 24 -p 3
+
+
+//probar 10 y 20
+slowhttptest -c 50 -X -g -o my_header_stats -i 10 -r 10 -t GET -u http://10.0.0.1/ -x 24 -p 3
+
+
+
+-H slow header
+-r rate 200 por segundo
+-c conexiones 3000
+
+una vez cambiado el ip del httpdetectos:
+sudo mvn clean install
+PATH=$PATH:/onos-admin-1.12.1-SNAPSHOT
+onos-app 172.17.0.2 reinstall! target/httpddosdetector-1.0-SNAPSHOT.oar
+onos-app 172.17.0.2 reinstall! target/intentBasedNetworking-1.0-SNAPSHOT.oar
+
+
+
+FLOW COLLECTOR
+cd Des../R../R../f..
+
+onos-app 172.17.0.2 reinstall! target/FlowCollector-1.0-SNAPSHOT.oar
+sudo bash
+gradle execute
+
+wget 10.0.0.1
+
+
+
+
+ESCENARIO PRUEBAS
+server 1,2
+normal 5-1, 6-1
+ataque 5-1 (otra terminal)
+
+probar comandos iperf
+comprobar que hay flujo,
+se bloquea el 5, el 6 sigue funcionando
+
+
+
+
+
+
+
+
+
+

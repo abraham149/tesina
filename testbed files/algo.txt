@@ -1,0 +1,56 @@
+import org.onlab.packet.IpAddress;
+import org.onlab.packet.Ip4Address;
+
+
+// Get src and dest of packet, for now it will
+// just check if source = 4 to block connections
+HostId srcId = Hostid.hostId(ethPkt.getSourceMAC());
+HostId dstId = Hostid.hostid(ethPkt.getDestinationMAC());
+String srcMAC = ethPkt.getSourceMAC().toString();
+String destMAC = ethPkt.getDestinationMAC().toString();
+IPv4 ipv4 = (IPv4) ethpkt.getPayload();
+int srcip = ipv4.getSourceAddress();
+String srcips Ip4Address.valueof(srcip).toString();
+int dstip = ipv4.getDestinationAddress();
+String dstips Ip4Address.valueof(dstip).toString();
+byte proto = ipv4.getProtocol();
+TCP tcp = (TCP) ipv4.getPayload();
+int srcport = tcp.getSourcePort();
+int dstport = tcp.getDestinationPort();
+log.info("Captured: srcmac: {}, srcip: {},srcport: {}, destMAC: {}, dstip: {},dstport: {},proto: {}", SICMAC, srcips,srcport, destMAC,dstips,dstport, proto);
+
+
+
+import java.util.HashMap; // import the HashMap class
+
+HashMap<String, List<Integer>> detected = new HashMap<String, List<Integer>>();
+
+timestamp = System.currentTimeMillis();
+
+if(detected.containsKey(srcips)){
+
+List<Integer> datos = ArrayList<Integer>();
+datos.add(timestamp);
+datos.add(5);
+datos.add(30);
+detected.put(key, datos)
+}else{
+List<Integer> datos = detected.get(key);
+int delay = timestamp - datos.get(0);
+delay = min(delay, TIMEOUT -1);
+oldFactor = datos.get(1);
+rateIncrease = 1/(Timeout - Delay);
+newFactor = oldFactor * (1 + rateIncrease);
+oldRate = datos.get(2);
+newRate = oldRate + newFactor;
+datos.set(0, timestamp);
+datos.set(1, newFactor);
+datos.set(2, newRate);
+detected.put(key, datos);
+
+if (newRate >= THRESHOLD){
+detected.remove(key);
+//bloquear
+
+}
+}
